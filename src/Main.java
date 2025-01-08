@@ -1,50 +1,49 @@
 import java.lang.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 class Codechef
 {
     public static void main (String[] args) {
-        List<String> list = inputList();
+        List<int[][]> list = inputList();
         list.stream()
-                .map(Codechef::isComplexString)
-                .map(a -> a?"NO":"YES")
+                .map(Codechef::maxTrace)
                 .forEach(System.out::println);
-
-
     }
 
-    private static List<String> inputList() {
-        List<String> list = new ArrayList<>();
+    private static List<int[][]> inputList() {
+        List<int[][]> res = new ArrayList<>();
         Scanner scan = new Scanner(System.in);
         int totalInput = scan.nextInt();
         for(int i =0;i<totalInput;i++){
-            int n =scan.nextInt();
-            String s = scan.next();
-            s = s.substring(0,n);
-            list.add(s);
+            int arrSize = scan.nextInt();
+            int [][] temp = new int[arrSize][arrSize];
+            for(int j = 0;j<arrSize;j++){
+                for(int k =0;k<arrSize;k++){
+                    temp[j][k]=scan.nextInt();
+                }
+            }
+            res.add(temp);
         }
-        return list;
+        return res;
     }
 
-    private static boolean isComplexString(String string){
-        char [] charArray = string.toCharArray();
-        int count =0 ;
-        for (char c : charArray) {
-            if (isVowel(c)) {
-                count = 0;
-            } else {
-                count++;
-            }
-            if (count >= 4) {
-                return true;
-            }
+    private static int maxTrace(int [][] matrix){
+        int max = Integer.MIN_VALUE;
+        for(int i =0 ;i< matrix.length;i++){
+            max = Math.max(traceWithStart(i,0,matrix),Math.max(traceWithStart(0,i,matrix),max));
         }
-        return false;
+        return max;
     }
 
-    private static boolean isVowel(char c) {
-        return c=='a' || c=='e' || c=='i' || c=='o' || c=='u';
+    private static int traceWithStart(int x, int y, int[][] matrix) {
+        int i = x;
+        int j = y;
+        int sum =0 ;
+        while(i<matrix.length && j<matrix.length){
+            sum+=matrix[i][j];
+            i++;
+            j++;
+        }
+        return sum;
     }
 }
