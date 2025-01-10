@@ -4,46 +4,51 @@ import java.util.*;
 class Codechef
 {
     public static void main (String[] args) {
-        List<int[][]> list = inputList();
-        list.stream()
-                .map(Codechef::maxTrace)
-                .forEach(System.out::println);
+        inputList().stream().map(Codechef::maxDivisors).forEach(System.out::println);
     }
 
-    private static List<int[][]> inputList() {
-        List<int[][]> res = new ArrayList<>();
+    private static List<Integer> inputList() {
+        List<Integer> res = new ArrayList<>();
         Scanner scan = new Scanner(System.in);
         int totalInput = scan.nextInt();
         for(int i =0;i<totalInput;i++){
-            int arrSize = scan.nextInt();
-            int [][] temp = new int[arrSize][arrSize];
-            for(int j = 0;j<arrSize;j++){
-                for(int k =0;k<arrSize;k++){
-                    temp[j][k]=scan.nextInt();
-                }
-            }
-            res.add(temp);
+            int n = scan.nextInt();
+            res.add(n);
         }
         return res;
     }
 
-    private static int maxTrace(int [][] matrix){
-        int max = Integer.MIN_VALUE;
-        for(int i =0 ;i< matrix.length;i++){
-            max = Math.max(traceWithStart(i,0,matrix),Math.max(traceWithStart(0,i,matrix),max));
+    private static int maxDivisors( int n){
+        int div= 0;
+        int maxCount = 0;
+        int tempCount =0;
+        while (n % 2 == 0) {
+            n /= 2;
+            tempCount++;
         }
-        return max;
+        if(maxCount<tempCount){
+            maxCount=tempCount;
+            div =2;
+        }
+        for (int i = 3; i * i <= n; i += 2) {
+            tempCount =0;
+            while (n % i == 0) {
+                n /= i;
+                tempCount++;
+            }
+            if(maxCount<tempCount){
+                maxCount=tempCount;
+                div =i;
+            }
+        }
+        if (n > 2){
+            tempCount =1;
+            if(maxCount<tempCount){
+                maxCount=tempCount;
+                div =n;
+            }
+        }
+        return div;
     }
 
-    private static int traceWithStart(int x, int y, int[][] matrix) {
-        int i = x;
-        int j = y;
-        int sum =0 ;
-        while(i<matrix.length && j<matrix.length){
-            sum+=matrix[i][j];
-            i++;
-            j++;
-        }
-        return sum;
-    }
 }
